@@ -1,7 +1,9 @@
 package com.ey.vehicleadv.controller;
 import java.util.List;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,27 +17,29 @@ import com.ey.vehicleadv.bean.VehicleBean;
 import com.ey.vehicleadv.service.VehicleService;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
-@RestController
+	@RestController
 @RequestMapping(path="/vehicle")
 public class VehicleController {
 	@Autowired
 	VehicleService vehicleService;
 	
+	@Value("${welcome.message}")
+    private String welcomeMessage;
 	
-	//@Tag(name = "get", description = "GET methods of Vehicle APIs")
+	@GetMapping(path="/welcomeMessage")
+	public String welcome() {
+		return welcomeMessage;
+	}
+	
 	@Operation(
 		      summary = "This API Retrieve all Vehicle details",
 		      description = "This API Get all Vehicle details.")
-		     // tags = { "Vehicle", "get" })
 	@GetMapping(path="/getAllVehicleDetails")
 	public List<VehicleBean> getAllVehicleDetails()
 	{
 		List<VehicleBean> vehList=vehicleService.getAllVehicleDetails();
 		return vehList;
 	}
-	
-	
 	//http://localhost:8080/vehicle/entryNewVehicleDetails
 	@Operation(
 		      summary = "This API helps entering a new all Vehicle details",
@@ -65,7 +69,10 @@ public class VehicleController {
 		return updatedVeh;
 	}
 	
-	
-	
+	@GetMapping(path="/getVehicleDetailsByBrand")
+	public List<VehicleBean> getVehicleDetailsByBrand(@RequestParam(name="brand") String brand) {
+		List<VehicleBean> vBeanList=vehicleService.getVehicleDetailsByBrand(brand);
+		return vBeanList;
+	}
 	
 }
